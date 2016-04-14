@@ -173,7 +173,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (left_velocity_function-(this->back_left_joint->GetVelocity(0)));
+			error = (left_velocity_function()-(this->back_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -185,7 +185,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (Linear_velocity_ref-(this->back_right_joint->GetVelocity(0)));
+			error = (right_velocity_function()-(this->back_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -197,7 +197,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (Linear_velocity_ref-(this->front_left_joint->GetVelocity(0)));
+			error = (left_velocity_function()-(this->front_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -209,7 +209,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (Linear_velocity_ref-(this->front_right_joint->GetVelocity(0)));
+			error = (right_velocity_function()-(this->front_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
