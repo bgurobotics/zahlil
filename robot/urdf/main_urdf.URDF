@@ -28,7 +28,7 @@
       <material
         name="">
         <color
-          rgba="0.843137254901961 0.564705882352941 0 1" />
+          rgba="0 0 0 0.5" />
       </material>
     </visual>
     <collision>
@@ -383,23 +383,23 @@
       <robotNamespace>/zahlil</robotNamespace>
     </plugin>
   </gazebo>
-  <gazebo reference="body">
-    <mu1>100</mu1>
-    <mu2>100</mu2>
+  <gazebo reference="base_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
     <selfCollide>true</selfCollide>
-    <material>Gazebo/Wood</material>
+    <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="front_right_joint">
+  <gazebo reference="front_right_link">
     <mu1>100</mu1>
     <mu2>100</mu2>
     <selfCollide>true</selfCollide>
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <gazebo reference="front_left_joint">
-    <mu1>1</mu1>
-    <mu2>1</mu2>
+  <gazebo reference="front_left_link">
+    <mu1>100</mu1>
+    <mu2>100</mu2>
     <selfCollide>true</selfCollide>
     <material>Gazebo/Grey</material>
   </gazebo>
