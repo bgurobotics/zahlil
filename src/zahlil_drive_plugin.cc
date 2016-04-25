@@ -33,9 +33,9 @@
 #define steering_message_max_time_delay 0.03
 
 // PID - Gain Values
-#define Kp 100
-#define Kd 20
-
+#define Kp 5
+#define Kd 0.1
+#define wide 0.15
 namespace gazebo
 {
   ///  A plugin to control the Hammvee driving.
@@ -134,10 +134,19 @@ namespace gazebo
     private: boost::mutex Angular_velocity_function_mutex;
 
 
-TODO:
-	private: float left_velocity_function(float )
-	{
 
+	private: float left_velocity_function(float linear_v,float angular_v)
+	{
+		float left_velocity_output;
+		left_velocity_output=linear_v-angular_v*wide;
+		return left_velocity_output;
+	}
+	
+	private: float right_velocity_function(float linear_v,float angular_v)
+	{
+		float right_velocity_output;
+		right_velocity_output=linear_v+angular_v*wide;
+		return right_velocity_output;
 	}
 
 	// The subscriber callback , each time data is published to the subscriber this function is being called and recieves the data in pointer msg
@@ -173,7 +182,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (left_velocity_function()-(this->back_left_joint->GetVelocity(0)));
+			error = (left_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->back_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -185,7 +194,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (right_velocity_function()-(this->back_right_joint->GetVelocity(0)));
+			error = (right_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->back_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -197,7 +206,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (left_velocity_function()-(this->front_left_joint->GetVelocity(0)));
+			error = (left_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->front_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -209,7 +218,7 @@ TODO:
 			float error,effort=0;
 			if (brake)
 				Linear_velocity_ref=0;
-			error = (right_velocity_function()-(this->front_right_joint->GetVelocity(0)));
+			error = (right_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->front_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;

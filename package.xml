@@ -9,9 +9,17 @@
 
   <license>BSD</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>   <!-- Compilation Library -->
+  <build_depend>geometry_msgs</build_depend>    <!-- Transfering Geometry Type Messages Library -->
+  <build_depend>gazebo_ros</build_depend>	<!-- Gazebo Library -->
+  <build_depend>roscpp</build_depend>		<!-- Ros Library -->
+  <build_depend>tf</build_depend>		<!-- Transformation Library -->
+  <build_depend>std_msgs</build_depend>		<!-- Transfering Standard Type Messages Library -->
+  <run_depend>geometry_msgs</run_depend>
   <run_depend>gazebo_ros</run_depend>
-  <build_depend>gazebo_ros</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>std_msgs</run_depend>
  
 
 <export>
