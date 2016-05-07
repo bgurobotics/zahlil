@@ -28,9 +28,9 @@
  <param name="treck_description" command="cat $(find zahlil)/robot/urdf/track_sdf.sdf" />
 
   <node name="sdf_right_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-sdf -model track_right -param treck_description -z 0 -y 0.11 -x 0.025 "/>
+	args="-sdf -model track_right -param treck_description -z 0 -y 0.125 -x 0.025 "/>
   <node name="sdf_left_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-sdf -model track_left -param treck_description -z 0 -y -0.11 -x 0.025 "/>
+	args="-sdf -model track_left -param treck_description -z 0 -y -0.125 -x 0.025 "/>
 
 
   <!-- ros_control clam launch file   -->

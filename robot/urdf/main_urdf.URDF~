@@ -28,7 +28,7 @@
       <material
         name="">
         <color
-          rgba="0.843137254901961 0.564705882352941 0 1" />
+          rgba="0 0 0 0.5" />
       </material>
     </visual>
     <collision>
@@ -77,7 +77,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-    <cylinder length="0.09" radius="0.07"
+    <cylinder length="0.09" radius="0.076"
           />
       </geometry>
     </collision>
@@ -154,7 +154,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-    <cylinder length="0.09" radius="0.07"
+    <cylinder length="0.09" radius="0.076"
           />
       </geometry>
     </collision>
@@ -233,7 +233,7 @@
         rpy="0 0 0" />
       <geometry>
 
-           <cylinder length="0.08" radius="0.07"
+           <cylinder length="0.08" radius="0.077"
           />
 
       </geometry>
@@ -242,19 +242,19 @@
 
 <collision>
       <origin
-        xyz="0 0 0.048"
+        xyz="0 0 0.017"
         rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.02" radius="0.078" 
+        <cylinder length="0.02" radius="0.08" 
           />
       </geometry>
     </collision>
 <collision>
       <origin
-        xyz="0 0 -0.088"
+        xyz="0 0 -0.087"
         rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.02" radius="0.078" 
+        <cylinder length="0.02" radius="0.08" 
           />
       </geometry>
     </collision>
@@ -313,7 +313,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-    <cylinder length="0.09" radius="0.07"
+    <cylinder length="0.09" radius="0.077"
           />
       </geometry>
     </collision>
@@ -321,10 +321,10 @@
 
 <collision>
       <origin
-        xyz="0 0 0.068"
+        xyz="0 0 0.052"
         rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.02" radius="0.078" 
+        <cylinder length="0.02" radius="0.08" 
           />
       </geometry>
     </collision>
@@ -332,10 +332,10 @@
 
 
       <origin
-        xyz="0 0 -0.068"
+        xyz="0 0 -0.052"
         rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.02" radius="0.078" 
+        <cylinder length="0.02" radius="0.08" 
           />
       </geometry>
     </collision>
@@ -357,7 +357,7 @@
       xyz="0 0 -1" />
   </joint>
 
-<!-- transmitions add  by Or -->
+<!-- transmitions add  by Or 
 <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="front_right_joint">
@@ -377,32 +377,38 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-<!-- gazebo plugin and friction  add  by Or -->
+  -->
+<!-- gazebo plugin and friction  add  by Or 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/zahlil</robotNamespace>
     </plugin>
   </gazebo>
-  <gazebo reference="body">
-    <mu1>100</mu1>
-    <mu2>100</mu2>
-    <selfCollide>true</selfCollide>
-    <material>Gazebo/Wood</material>
-  </gazebo>
-
-  <gazebo reference="front_right_joint">
-    <mu1>100</mu1>
-    <mu2>100</mu2>
-    <selfCollide>true</selfCollide>
-    <material>Gazebo/Grey</material>
-  </gazebo>
-
-  <gazebo reference="front_left_joint">
+  -->
+  <gazebo reference="base_link">
     <mu1>1</mu1>
     <mu2>1</mu2>
     <selfCollide>true</selfCollide>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="front_right_link">
+    <mu1>100</mu1>
+    <mu2>100</mu2>
+    <selfCollide>true</selfCollide>
     <material>Gazebo/Grey</material>
   </gazebo>
 
+  <gazebo reference="front_left_link">
+    <mu1>100</mu1>
+    <mu2>100</mu2>
+    <selfCollide>true</selfCollide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+
+<gazebo>
+ <plugin name="zahlil_drive_control" filename="libzahlil_drive_plugin.so"/> 
+</gazebo>
 
 </robot>

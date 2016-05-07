@@ -33,9 +33,9 @@
 #define steering_message_max_time_delay 0.03
 
 // PID - Gain Values
-#define Kp 5
-#define Kd 0.1
-#define wide 0.15
+#define Kp 1
+#define Kd 2
+
 namespace gazebo
 {
   ///  A plugin to control the Hammvee driving.
@@ -63,8 +63,8 @@ namespace gazebo
       velocity_timer.Start();
 
       // Subscribe to the topic, and register a callback
-      Steering_rate_sub = n.subscribe("/ZAHLIL_LLC/Angular_Velocity" , 1000, &ZahlilDrivePlugin::On_Angular_Msg, this);
-      Velocity_rate_sub = n.subscribe("/ZAHLIL_LLC/Linear_Velocity" , 1000, &ZahlilDrivePlugin::On_Velocity_Msg, this);
+      Steering_rate_sub = n.subscribe("/ZAHLIL_LLC/V_l" , 1000, &ZahlilDrivePlugin::On_V_l_Msg, this);
+      Velocity_rate_sub = n.subscribe("/ZAHLIL_LLC/V_r" , 1000, &ZahlilDrivePlugin::On_V_r_Msg, this);
       // Listen to the update event. This event is broadcast every simulation iteration. 
       this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&ZahlilDrivePlugin::OnUpdate, this, _1));
 
@@ -123,55 +123,40 @@ namespace gazebo
     private: common::Timer velocity_timer;
 
     // Defining private Reference Holders
-    private: float Angular_velocity_ref;
-    private: float Linear_velocity_ref;
+    private: float left_velocity_ref;
+    private: float right_velocity_ref;
     private: float Angular_velocity_function;
     private: float Linear_velocity_function;
     // Defining private Mutex
-    private: boost::mutex Angular_velocity_ref_mutex;
-    private: boost::mutex Linear_velocity_ref_mutex;
+    private: boost::mutex left_velocity_ref_mutex;
+    private: boost::mutex right_velocity_ref_mutex;
     private: boost::mutex Linear_velocity_function_mutex;
     private: boost::mutex Angular_velocity_function_mutex;
 
 
 
-	private: float left_velocity_function(float linear_v,float angular_v)
-	{
-		float left_velocity_output;
-		left_velocity_output=linear_v-angular_v*wide;
-		return left_velocity_output;
-	}
-	
-	private: float right_velocity_function(float linear_v,float angular_v)
-	{
-		float right_velocity_output;
-		right_velocity_output=linear_v+angular_v*wide;
-		return right_velocity_output;
-	}
-
 	// The subscriber callback , each time data is published to the subscriber this function is being called and recieves the data in pointer msg
-	private: void On_Angular_Msg(const std_msgs::Float64ConstPtr &msg)
+	private: void On_V_l_Msg(const std_msgs::Float64ConstPtr &msg)
 	{
-	  Angular_velocity_ref_mutex.lock();
+	  left_velocity_ref_mutex.lock();
 		  // Recieving referance steering angle
-		  Angular_velocity_ref=msg->data;
+		  left_velocity_ref=msg->data;
 		  // Reseting timer every time LLC publishes message
 		  steering_timer.Start();
-	  Angular_velocity_ref_mutex.unlock();
+	  left_velocity_ref_mutex.unlock();
 	}
 
 	// The subscriber callback , each time data is published to the subscriber this function is being called and recieves the data in pointer msg
-	private: void On_Velocity_Msg(const std_msgs::Float64ConstPtr &msg)
+	private: void On_V_r_Msg(const std_msgs::Float64ConstPtr &msg)
 	{
-	  Linear_velocity_ref_mutex.lock();
+	  right_velocity_ref_mutex.lock();
 		  // Recieving referance hammer velocity
-		  Linear_velocity_ref=msg->data;
+		  right_velocity_ref=msg->data;
 		  // Reseting timer every time LLC publishes message
 		  velocity_timer.Start();
-	  Linear_velocity_ref_mutex.unlock();
+	  right_velocity_ref_mutex.unlock();
 
 	}
-
 
 
 	// this function sets the efforts given to the hammer wheels according to error getting to refarance velocity, effort inserted via wheel_joints	
@@ -181,8 +166,8 @@ namespace gazebo
 		Linear_velocity_function_mutex.lock();
 			float error,effort=0;
 			if (brake)
-				Linear_velocity_ref=0;
-			error = (left_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->back_left_joint->GetVelocity(0)));
+				right_velocity_ref=0;
+			error = (left_velocity_ref-(this->back_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -193,8 +178,8 @@ namespace gazebo
 		Linear_velocity_function_mutex.lock();
 			float error,effort=0;
 			if (brake)
-				Linear_velocity_ref=0;
-			error = (right_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->back_right_joint->GetVelocity(0)));
+				right_velocity_ref=0;
+			error = (right_velocity_ref-(this->back_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -205,8 +190,8 @@ namespace gazebo
 		Linear_velocity_function_mutex.lock();
 			float error,effort=0;
 			if (brake)
-				Linear_velocity_ref=0;
-			error = (left_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->front_left_joint->GetVelocity(0)));
+				right_velocity_ref=0;
+			error = (left_velocity_ref-(this->front_left_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
@@ -217,8 +202,8 @@ namespace gazebo
 		Linear_velocity_function_mutex.lock();
 			float error,effort=0;
 			if (brake)
-				Linear_velocity_ref=0;
-			error = (right_velocity_function(Linear_velocity_ref,Angular_velocity_ref)-(this->front_right_joint->GetVelocity(0)));
+				right_velocity_ref=0;
+			error = (right_velocity_ref-(this->front_right_joint->GetVelocity(0)));
 			effort = Kp*error;
 		Linear_velocity_function_mutex.unlock();
 		return effort;
